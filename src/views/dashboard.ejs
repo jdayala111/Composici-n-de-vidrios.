@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/public/styles/dashboard_style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/settings">Settings</a></li>
+            <li><a href="/logout">Logout</a></li> <!-- Enlace de logout -->
+        </ul>
+    </nav>
+    <main>
+        <h1>Dashboard</h1>
+        <section id="statistics">
+            <div class="stat">
+                <h2>Average RI</h2>
+                <p><%= avgRI %></p>
+            </div>
+            <div class="stat">
+                <h2>Average Na</h2>
+                <p><%= avgNa %></p>
+            </div>
+        </section>
+        <section id="data-table">
+            <h2>Recent Glass Data</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>RI</th>
+                        <th>Na</th>
+                        <th>Mg</th>
+                        <th>Al</th>
+                        <th>Si</th>
+                        <th>K</th>
+                        <th>Ca</th>
+                        <th>Ba</th>
+                        <th>Fe</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% glassData.forEach(function(data) { %>
+                        <tr>
+                            <td><%= data.RI %></td>
+                            <td><%= data.Na %></td>
+                            <td><%= data.Mg %></td>
+                            <td><%= data.Al %></td>
+                            <td><%= data.Si %></td>
+                            <td><%= data.K %></td>
+                            <td><%= data.Ca %></td>
+                            <td><%= data.Ba %></td>
+                            <td><%= data.Fe %></td>
+                            <td><%= data.Type %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </section>
+        <section id="charts">
+            <h2>Glass Type Distribution</h2>
+            <canvas id="typeChart"></canvas>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('typeChart').getContext('2d');
+            var typeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: <%= JSON.stringify(typeData.map(d => d.Type)) %>,
+                    datasets: [{
+                        label: 'Average RI',
+                        data: <%= JSON.stringify(typeData.map(d => d.avgRI)) %>,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
